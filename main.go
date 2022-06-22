@@ -8,6 +8,8 @@ import (
 	whoisparser "github.com/likexian/whois-parser"
 )
 
+const DEBUG bool = false
+
 func main() {
 	// all lower-case ASCII alnum runes
 	var runes []rune
@@ -17,7 +19,9 @@ func main() {
 	for r := '0'; r <= '9'; r++ {
 		runes = append(runes, r)
 	}
-	fmt.Printf("Using the following runes: %c\n", runes)
+	if DEBUG {
+		fmt.Printf("Using the following runes: %c\n", runes)
+	}
 
 	// Create domain names to check
 	// Append all single runes to names
@@ -30,8 +34,8 @@ func main() {
 	var name2c []string
 	for _, permutation := range runes {
 		for _, second := range runes {
-			domain := string(second) + string(permutation)
-			name2c = append(name2c, domain)
+			d2 := string(second) + string(permutation)
+			name2c = append(name2c, d2)
 		}
 	}
 	names = append(names, name2c...)
@@ -41,29 +45,45 @@ func main() {
 	for _, permutation := range runes {
 		for _, second := range runes {
 			for _, third := range runes {
-				domain := string(third) + string(second) + string(permutation)
-				name3c = append(name3c, domain)
+				d3 := string(third) + string(second) + string(permutation)
+				name3c = append(name3c, d3)
 			}
 		}
 	}
 	names = append(names, name3c...)
 
 	sort.Strings(names)
+
 	// Whois
-	fmt.Printf("Using the following domain names: %s\n", names)
+	if DEBUG {
+		fmt.Printf("Using the following domain names: %s\n", names)
+	}
 	tld := ".de"
+	fmt.Printf("Scanning %d domains", len(names))
+	var free []string
 	for _, domain := range names {
+		fmt.Printf(".")
 		domain := string(domain) + tld
 
-		fmt.Printf("Testing %s", domain)
+		if DEBUG {
+			fmt.Printf("Testing\t%s", domain)
+		}
 		result, err := whois.Whois(domain)
 		if err == nil {
 			_, err := whoisparser.Parse(result)
 			if err != nil {
-				fmt.Println(" - FREE")
+				if DEBUG {
+					fmt.Println("\t-> FREE")
+				} else {
+					free = append(free, domain)
+				}
 			} else {
-				fmt.Println(" - not available")
+				if DEBUG {
+					fmt.Println("\t-> not available")
+				}
 			}
 		}
 	}
+
+	fmt.Printf("\nFree domains: %s", free)
 }
