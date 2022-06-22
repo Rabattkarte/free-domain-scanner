@@ -17,7 +17,7 @@ func main() {
 		runes = append(runes, r)
 	}
 
-	fmt.Printf("Using the following runes: %c", runes)
+	fmt.Printf("Using the following runes: %c\n", runes)
 
 	for _, domain := range runes {
 		domain := string(domain) + ".de"
