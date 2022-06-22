@@ -60,9 +60,14 @@ func main() {
 	}
 	tld := ".de"
 	fmt.Printf("Scanning %d domains", len(names))
+	if DEBUG {
+		fmt.Println()
+	}
 	var free []string
 	for _, domain := range names {
-		fmt.Printf(".")
+		if !DEBUG {
+			fmt.Printf(".")
+		}
 		domain := string(domain) + tld
 
 		if DEBUG {
@@ -77,10 +82,8 @@ func main() {
 				} else {
 					free = append(free, domain)
 				}
-			} else {
-				if DEBUG {
-					fmt.Println("\t-> not available")
-				}
+			} else if DEBUG {
+				fmt.Println("\t-> not available")
 			}
 		}
 	}
