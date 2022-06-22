@@ -19,8 +19,9 @@ func main() {
 
 	fmt.Printf("Using the following runes: %c\n", runes)
 
+	tld := ".de"
 	for _, domain := range runes {
-		domain := string(domain) + ".de"
+		domain := string(domain) + tld
 		result, err := whois.Whois(domain)
 		if err == nil {
 			result, err := whoisparser.Parse(result)
