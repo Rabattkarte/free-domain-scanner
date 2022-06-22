@@ -79,9 +79,8 @@ func main() {
 			if err != nil {
 				if DEBUG {
 					fmt.Println("\t-> FREE")
-				} else {
-					free = append(free, domain)
 				}
+				free = append(free, domain)
 			} else if DEBUG {
 				fmt.Println("\t-> not available")
 			}
