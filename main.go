@@ -16,20 +16,22 @@ func main() {
 	for r := '0'; r <= '9'; r++ {
 		runes = append(runes, r)
 	}
-	fmt.Printf("Using the following runes: %c\n", runes)
+	fmt.Printf("Using two of the following runes: %c\n", runes)
 
 	tld := ".de"
-	for _, domain := range runes {
-		domain := string(domain) + tld
+	for _, d1 := range runes {
+		for _, d2 := range runes {
+			domain := fmt.Sprintf("%c%c%s", d1, d2, tld)
 
-		fmt.Printf("Testing %s", domain)
-		result, err := whois.Whois(domain)
-		if err == nil {
-			_, err := whoisparser.Parse(result)
-			if err != nil {
-				fmt.Println(" - FREE")
-			} else {
-				fmt.Println(" - not available")
+			fmt.Printf("Testing %s", domain)
+			result, err := whois.Whois(domain)
+			if err == nil {
+				_, err := whoisparser.Parse(result)
+				if err != nil {
+					fmt.Println(" - FREE")
+				} else {
+					fmt.Println(" - not available")
+				}
 			}
 		}
 	}
