@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"sort"
 
 	"github.com/likexian/whois"
 	whoisparser "github.com/likexian/whois-parser"
@@ -18,8 +19,40 @@ func main() {
 	}
 	fmt.Printf("Using the following runes: %c\n", runes)
 
+	// Create domain names to check
+	// Append all single runes to names
+	var names []string
+	for _, v := range runes {
+		names = append(names, string(v))
+	}
+
+	// Permutation 2 letters
+	var name2c []string
+	for _, permutation := range runes {
+		for _, second := range runes {
+			domain := string(second) + string(permutation)
+			name2c = append(name2c, domain)
+		}
+	}
+	names = append(names, name2c...)
+
+	// Permutation 3 letters
+	var name3c []string
+	for _, permutation := range runes {
+		for _, second := range runes {
+			for _, third := range runes {
+				domain := string(third) + string(second) + string(permutation)
+				name3c = append(name3c, domain)
+			}
+		}
+	}
+	names = append(names, name3c...)
+
+	sort.Strings(names)
+	// Whois
+	fmt.Printf("Using the following domain names: %s\n", names)
 	tld := ".de"
-	for _, domain := range runes {
+	for _, domain := range names {
 		domain := string(domain) + tld
 
 		fmt.Printf("Testing %s", domain)
