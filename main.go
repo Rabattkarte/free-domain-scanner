@@ -16,18 +16,20 @@ func main() {
 	for r := '0'; r <= '9'; r++ {
 		runes = append(runes, r)
 	}
-
 	fmt.Printf("Using the following runes: %c\n", runes)
 
 	tld := ".de"
 	for _, domain := range runes {
 		domain := string(domain) + tld
+
+		fmt.Printf("Testing %s", domain)
 		result, err := whois.Whois(domain)
 		if err == nil {
-			result, err := whoisparser.Parse(result)
-			if err == nil {
-				// Print the domain status
-				fmt.Println(result.Domain.Domain+": ", result.Domain.Status)
+			_, err := whoisparser.Parse(result)
+			if err != nil {
+				fmt.Println(" - FREE")
+			} else {
+				fmt.Println(" - not available")
 			}
 		}
 	}
